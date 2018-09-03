@@ -1,0 +1,22 @@
+{
+  "name": "node-phraseapp-client",
+  "version": "0.0.1",
+  "description": "A thin wrapper to handle requests to the PhraseApp API",
+  "main": "src/client.js",
+  "dependencies": {
+    "debug": "3.1.0",
+    "node-fetch-backoff": "0.0.1",
+    "parse-link-header": "1.0.1"
+  },
+  "devDependencies": {
+    "eslint": "4.19.0",
+    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-plugin-import": "2.9.0",
+    "eslint-plugin-jest": "21.15.0"
+  },
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "author": "Jesper Birkestrøm <jbi@one.com>",
+  "license": "MIT"
+}

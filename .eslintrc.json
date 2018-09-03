@@ -1,0 +1,14 @@
+{
+  "extends": [ "airbnb-base", "plugin:jest/recommended" ],
+  "plugins": ["jest"],
+  "env": {
+    "jest/globals": true
+  },
+  "rules": {
+    "no-await-in-loop": "off",
+    "no-multi-assign": "off",
+    "no-restricted-syntax": "off",
+    "no-continue": "off",
+    "no-console": "off"
+  }
+}
