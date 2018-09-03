@@ -1,6 +1,6 @@
 {
   "name": "node-phraseapp-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A thin wrapper to handle requests to the PhraseApp API",
   "main": "src/client.js",
   "dependencies": {
