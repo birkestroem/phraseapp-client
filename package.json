@@ -4,7 +4,7 @@
   "description": "A thin wrapper to handle requests to the PhraseApp API",
   "main": "src/client.js",
   "dependencies": {
-    "debug": "3.1.0",
+    "debug": "4.0.1",
     "parse-link-header": "1.0.1",
     "teepee": "2.31.2"
   },
