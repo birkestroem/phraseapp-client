@@ -132,6 +132,15 @@ class PhraseAppClient extends Teepee {
   }
 
   /**
+   * List all projects the current user has access to.
+   *
+   * @see https://developers.phraseapp.com/api/#projects
+   */
+  listProjects() {
+    return this.get('/projects');
+  }
+
+  /**
    * Search keys for the given project matching query.
    *
    * @see https://developers.phraseapp.com/api/#keys_search
