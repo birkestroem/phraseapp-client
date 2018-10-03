@@ -2,7 +2,8 @@
 
 A thin wrapper to handle requests to the PhraseApp API.
 
-[![Dependency Status](https://david-dm.org//birkestroem/phraseapp-client.svg)](https://david-dm.org/birkestroem/phraseapp-client)
+[![npm version](https://badge.fury.io/js/phraseapp-client.svg)](https://badge.fury.io/js/phraseapp-client)
+[![Dependency Status](https://david-dm.org/birkestroem/phraseapp-client.svg)](https://david-dm.org/birkestroem/phraseapp-client)
 
 ## Examples
 
