@@ -71,6 +71,10 @@ arrify@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
+asynckit@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+
 babel-code-frame@^6.22.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-code-frame/-/babel-code-frame-6.26.0.tgz#63fd43f7dc1e3bb7ce35947db8fe369a3f58c74b"
@@ -82,6 +86,10 @@ babel-code-frame@^6.22.0:
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+
+bluebird@2.9.34:
+  version "2.9.34"
+  resolved "http://registry.npmjs.org/bluebird/-/bluebird-2.9.34.tgz#2f7b4ec80216328a9fddebdf69c8d4942feff7d8"
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -158,6 +166,12 @@ color-name@1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
+combined-stream@^1.0.5:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.7.tgz#2d1d24317afb8abe95d6d2c0b07b57813539d828"
+  dependencies:
+    delayed-stream "~1.0.0"
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -178,6 +192,18 @@ contains-path@^0.1.0:
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+
+createerror@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/createerror/-/createerror-1.1.0.tgz#2a711f589cc7ca38586414398856b8a30ea4a06b"
+
+createerror@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/createerror/-/createerror-1.2.0.tgz#5881f9abdfc2826fd1c3cf09adffe6da2ec74909"
+
+createerror@1.3.0, createerror@^1.2.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/createerror/-/createerror-1.3.0.tgz#c666bd4cd6b94e35415396569d4649dd0cdb3313"
 
 cross-spawn@^5.1.0:
   version "5.1.0"
@@ -214,6 +240,19 @@ del@^2.0.2:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
     rimraf "^2.2.8"
+
+delayed-stream@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
+
+dnserrors@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/dnserrors/-/dnserrors-2.1.2.tgz#febfcaeb225608ed196ecf417baeef054fb794d0"
+  dependencies:
+    createerror "^1.2.0"
+    httperrors "^2.2.0"
+    lodash.defaults "^4.2.0"
+    lodash.omit "^4.5.0"
 
 doctrine@1.5.0:
   version "1.5.0"
@@ -421,6 +460,14 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
+form-data@2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.4.tgz#33c183acf193276ecaa98143a69e94bfee1750d1"
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.5"
+    mime-types "^2.1.12"
+
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -482,6 +529,24 @@ has@^1.0.1:
 hosted-git-info@^2.1.4:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.7.1.tgz#97f236977bd6e125408930ff6de3eec6281ec047"
+
+httperrors@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/httperrors/-/httperrors-2.0.1.tgz#02febcaec8d9d6a9e1ae3773915b9fdaa2204672"
+  dependencies:
+    createerror "1.1.0"
+
+httperrors@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/httperrors/-/httperrors-2.2.0.tgz#cdc2e21b8866a63f9ed69e569d075ea62a0c934f"
+  dependencies:
+    createerror "1.2.0"
+
+httperrors@^2.2.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/httperrors/-/httperrors-2.3.0.tgz#edb7bfc2f635b00ef27e92d46ca48b5840683679"
+  dependencies:
+    createerror "1.3.0"
 
 iconv-lite@^0.4.17:
   version "0.4.24"
@@ -565,6 +630,10 @@ is-resolvable@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-resolvable/-/is-resolvable-1.1.0.tgz#fb18f87ce1feb925169c9a407c19318a3206ed88"
 
+is-stream@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
+
 isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
@@ -615,6 +684,26 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
+lodash.assign@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
+
+lodash.clone@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"
+
+lodash.defaults@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
+
+lodash.omit@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.omit/-/lodash.omit-4.5.0.tgz#6eb19ae5a1ee1dd9df0b969e66ce0b7fa30b5e60"
+
+lodash.uniq@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
+
 lodash@^4.17.4, lodash@^4.3.0:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
@@ -625,6 +714,16 @@ lru-cache@^4.0.1:
   dependencies:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
+
+mime-db@~1.36.0:
+  version "1.36.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.36.0.tgz#5020478db3c7fe93aad7bbcc4dcf869c43363397"
+
+mime-types@^2.1.12:
+  version "2.1.20"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.20.tgz#930cb719d571e903738520f8470911548ca2cc19"
+  dependencies:
+    mime-db "~1.36.0"
 
 mimic-fn@^1.0.0:
   version "1.2.0"
@@ -657,17 +756,6 @@ mute-stream@0.0.7:
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
-
-node-fetch-backoff@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/node-fetch-backoff/-/node-fetch-backoff-0.0.1.tgz#8ec7b99142384e16f3f580e44f3c7aada5d9e550"
-  dependencies:
-    debug "3.1.0"
-    node-fetch "2.2.0"
-
-node-fetch@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.2.0.tgz#4ee79bde909262f9775f731e3656d0db55ced5b5"
 
 normalize-package-data@^2.3.2:
   version "2.4.0"
@@ -736,6 +824,10 @@ parse-link-header@1.0.1:
   resolved "https://registry.yarnpkg.com/parse-link-header/-/parse-link-header-1.0.1.tgz#bedfe0d2118aeb84be75e7b025419ec8a61140a7"
   dependencies:
     xtend "~4.0.1"
+
+passerror@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/passerror/-/passerror-1.1.1.tgz#a25b88dbdd910a29603aec7dcb96e9a7a97687b4"
 
 path-exists@^2.0.0:
   version "2.1.0"
@@ -914,6 +1006,13 @@ slice-ansi@1.0.0:
   dependencies:
     is-fullwidth-code-point "^2.0.0"
 
+socketerrors@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/socketerrors/-/socketerrors-0.3.0.tgz#34bd74dce32786e235e1629bee12a8a3db1e2bda"
+  dependencies:
+    createerror "1.1.0"
+    httperrors "2.0.1"
+
 spdx-correct@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.0.0.tgz#05a5b4d7153a195bc92c3c425b69f3b2a9524c82"
@@ -993,6 +1092,24 @@ table@4.0.2:
     lodash "^4.17.4"
     slice-ansi "1.0.0"
     string-width "^2.1.1"
+
+teepee@2.31.2:
+  version "2.31.2"
+  resolved "https://registry.yarnpkg.com/teepee/-/teepee-2.31.2.tgz#2283fd176176c93977769bade1247fae7d41e58a"
+  dependencies:
+    bluebird "2.9.34"
+    createerror "1.2.0"
+    dnserrors "2.1.2"
+    form-data "2.1.4"
+    httperrors "2.2.0"
+    is-stream "1.1.0"
+    lodash.assign "^4.2.0"
+    lodash.clone "^4.5.0"
+    lodash.defaults "^4.2.0"
+    lodash.omit "^4.5.0"
+    lodash.uniq "^4.5.0"
+    passerror "1.1.1"
+    socketerrors "^0.3.0"
 
 text-table@~0.2.0:
   version "0.2.0"

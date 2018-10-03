@@ -1,75 +1,205 @@
 const debugFactory = require('debug');
-const backoffFetch = require('node-fetch-backoff');
 const parseLinkHeader = require('parse-link-header');
+const Teepee = require('teepee');
 
-class PhraseAppClient {
-  constructor(baseUrl, accessToken) {
-    this.baseUrl = baseUrl;
-    this.accessToken = accessToken;
+const debug = debugFactory('phraseapp-client');
+
+function getNextLinkFromHeaders(headers) {
+  const links = parseLinkHeader(headers.link);
+  return links && links.next ? links.next : null;
+}
+
+class PhraseAppClient extends Teepee {
+  constructor(url, accessToken) {
+    const opts = {
+      url,
+      headers: {
+        Authorization: `token ${accessToken}`,
+      },
+    };
+    super(opts);
 
     this.globalFetchOptions = {
       headers: {
         Authorization: `token ${accessToken}`,
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+      },
+      isOK: res => res.status < 400,
+      extraText: (resp) => {
+        const rateLimit = resp.headers.get('X-Rate-Limit-Limit');
+        const rateLimitRemaining = resp.headers.get('X-Rate-Limit-Remaining');
+        return `${rateLimitRemaining}/${rateLimit}`;
       },
     };
   }
 
+  /**
+   * Generic request method that follow next links in the header.
+   *
+   * @param {string} path
+   * @param {object} options
+   */
   async request(path, options = {}) {
-    const debug = options.debug || debugFactory(options.requestId || 'phraseappclient');
-    const fetch = options.fetch || backoffFetch();
     let { body } = options;
-
-    let url;
-    if (options.absoluteUrl === true) {
-      url = path;
-    } else if (path.substring(0, 1) === '/') {
-      url = `${this.baseUrl}${path}`;
-    } else {
-      url = `${this.baseUrl}/${path}`;
-    }
 
     if (typeof body !== 'string') {
       body = JSON.stringify(body);
     }
 
-    const requestOptions = Object.assign({}, this.globalFetchOptions, options, {
-      body,
-    });
-    const res = await fetch(url, requestOptions);
+    const requestOptions = { ...options, url: path };
 
-    debug('Return status is %d', res.status);
-    if (res.status > 399) {
-      throw new Error(`Error requesting ${url}. Request returned http error ${res.status}.`);
-    }
+    const result = await super.request(requestOptions);
+    debug(`Got response status ${result.status}`);
+    const { body: resultBody } = result;
 
-    if (res.status === 204) {
+    if (result.status === 204) {
       return null;
     }
 
-    const contentType = res.headers.get('content-type');
-    if (!contentType.match(/^application\/json/)) {
-      throw new Error(`Unexpected content returned from ${url}. Returned content type ${contentType}.`);
+    let nextLink = getNextLinkFromHeaders(result.headers);
+    if (nextLink) {
+      debug(`Following next link ${nextLink}`);
+      let resultData = resultBody;
+      let nextPath;
+
+      while (nextLink !== null) {
+        debug(`Following next link ${nextLink}`);
+        nextPath = nextLink.url.slice(this.url.length); // remove the baseUrl
+        const nextResult = await this.request(nextPath);
+        resultData = resultData.concat(nextResult.body);
+        nextLink = getNextLinkFromHeaders(result.headers);
+      }
+
+      return resultData;
     }
 
-    let json;
-    try {
-      json = await res.json();
-    } catch (error) {
-      throw new Error(`Unable to parse JSON content. Got error ${error}.`);
-    }
-    let data = json;
+    return resultBody;
+  }
 
-    const links = parseLinkHeader(res.headers.get('link'));
-    if (links && links.next) {
-      debug('Following next link');
-      data = data.concat(await this.request(links.next.url, Object.assign({}, requestOptions, {
-        absoluteUrl: true,
-      })));
-    }
+  /**
+   * GET convenience method
+   *
+   * @param {string} path
+   * @param {object} options
+   */
+  get(path, options) {
+    const postOptions = { ...options, method: 'GET' };
+    return this.request(path, postOptions);
+  }
 
-    return data;
+  /**
+   * POST convenience method
+   *
+   * @param {string} path
+   * @param {object} options
+   */
+  post(path, options) {
+    const postOptions = { ...options, method: 'POST' };
+    return this.request(path, postOptions);
+  }
+
+  /**
+   * PUT convenience method
+   *
+   * @param {string} path
+   * @param {object} options
+   */
+  put(path, options) {
+    const postOptions = { ...options, method: 'PUT' };
+    return this.request(path, postOptions);
+  }
+
+  /**
+   * PATCH convenience method
+   *
+   * @param {string} path
+   * @param {object} options
+   */
+  patch(path, options) {
+    const postOptions = { ...options, method: 'PATCH' };
+    return this.request(path, postOptions);
+  }
+
+  /**
+   * DELETE convenience method
+   *
+   * @param {string} path
+   * @param {object} options
+   */
+  delete(path, options) {
+    const postOptions = { ...options, method: 'DELETE' };
+    return this.request(path, postOptions);
+  }
+
+  /**
+   * Search keys for the given project matching query.
+   *
+   * @see https://developers.phraseapp.com/api/#keys_search
+   * @param {string} projectId
+   * @param {object} query
+   */
+  searchKeys(projectId, query = {}) {
+    return this.post(`/projects/${projectId}/keys/search`, {
+      body: query,
+    });
+  }
+
+  /**
+   * List all translation for a single key.
+   *
+   * @see https://developers.phraseapp.com/api/#translations_index_keys
+   * @param {string} projectId
+   * @param {string} keyId
+   */
+  listTranslations(projectId, keyId) {
+    return this.get(`/projects/${projectId}/keys/${keyId}/translations`);
+  }
+
+  /**
+   * Create translation for a key.
+   *
+   * @see https://developers.phraseapp.com/api/#translations_create
+   * @param {string} projectId
+   * @param {string} localeId
+   * @param {string} keyId
+   */
+  createTranslation(projectId, localeId, keyId) {
+    return this.post(`/projects/${projectId}/translations`, {
+      body: {
+        locale_id: localeId,
+        key_id: keyId,
+      },
+    });
+  }
+
+  /**
+   * Include translations for locales.
+   *
+   * @see https://developers.phraseapp.com/api/#translations_include
+   * @param {string} projectId
+   * @param {Array<string>} translationIds
+   */
+  includeTranslations(projectId, translationIds = []) {
+    return this.patch(`/projects/${projectId}/translations/include`, {
+      body: {
+        q: `id:${[...translationIds].join(',')}`,
+      },
+    });
+  }
+
+  /**
+   * Exclude translations for locales.
+   *
+   * @see https://developers.phraseapp.com/api/#translations_exclude
+   * @param {string} projectId
+   * @param {Array<string>} translationIds
+   */
+  excludeTranslations(projectId, translationIds = []) {
+    return this.patch(`/projects/${projectId}/translations/exclude`, {
+      body: {
+        q: `id:${[...translationIds].join(',')}`,
+      },
+    });
   }
 }
 
