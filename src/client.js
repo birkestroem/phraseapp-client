@@ -1,6 +1,6 @@
 const debugFactory = require('debug');
 const parseLinkHeader = require('parse-link-header');
-const Teepee = require('teepee');
+const fetchBackoffFactory = require('node-fetch-backoff');
 
 const debug = debugFactory('phraseapp-client');
 
@@ -9,16 +9,9 @@ function getNextLinkFromHeaders(headers) {
   return links && links.next ? links.next : null;
 }
 
-class PhraseAppClient extends Teepee {
+class PhraseAppClient {
   constructor(url, accessToken) {
-    const opts = {
-      url,
-      headers: {
-        Authorization: `token ${accessToken}`,
-      },
-    };
-    super(opts);
-
+    this.baseUrl = url;
     this.globalFetchOptions = {
       headers: {
         Authorization: `token ${accessToken}`,
@@ -46,9 +39,10 @@ class PhraseAppClient extends Teepee {
       body = JSON.stringify(body);
     }
 
-    const requestOptions = { ...options, url: path };
+    const requestOptions = { ...options, url: `${this.baseUrl}/${path}` };
+    const fetch = fetchBackoffFactory();
 
-    const result = await super.request(requestOptions);
+    const result = await fetch(requestOptions);
     debug(`Got response status ${result.status}`);
     const { body: resultBody } = result;
 
@@ -65,7 +59,7 @@ class PhraseAppClient extends Teepee {
       while (nextLink !== null) {
         debug(`Following next link ${nextLink}`);
         nextPath = nextLink.url.slice(this.url.length); // remove the baseUrl
-        const nextResult = await this.request(nextPath);
+        const nextResult = await fetch(nextPath);
         resultData = resultData.concat(nextResult.body);
         nextLink = getNextLinkFromHeaders(result.headers);
       }
