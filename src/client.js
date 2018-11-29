@@ -1,21 +1,24 @@
 const debugFactory = require('debug');
-const parseLinkHeader = require('parse-link-header');
-const fetchBackoffFactory = require('node-fetch-backoff');
+const fetch = require('./fetch');
+const urljoin = require('url-join');
 
 const debug = debugFactory('phraseapp-client');
 
-function getNextLinkFromHeaders(headers) {
-  const links = parseLinkHeader(headers.link);
-  return links && links.next ? links.next : null;
-}
-
+/**
+ * 
+ */
 class PhraseAppClient {
+  /**
+   * 
+   * @param {string} url 
+   * @param {string} accessToken 
+   */
   constructor(url, accessToken) {
     this.baseUrl = url;
     this.globalFetchOptions = {
       headers: {
         Authorization: `token ${accessToken}`,
-        'Content-Type': 'application/json',
+        'User-Agent': 'https://www.npmjs.com/package/phraseapp-client',
       },
       isOK: res => res.status < 400,
       extraText: (resp) => {
@@ -27,148 +30,104 @@ class PhraseAppClient {
   }
 
   /**
-   * Generic request method that follow next links in the header.
-   *
-   * @param {string} path
-   * @param {object} options
-   */
-  async request(path, options = {}) {
-    let { body } = options;
-
-    if (typeof body !== 'string') {
-      body = JSON.stringify(body);
-    }
-
-    const requestOptions = { ...options, url: `${this.baseUrl}/${path}` };
-    const fetch = fetchBackoffFactory();
-
-    const result = await fetch(requestOptions);
-    debug(`Got response status ${result.status}`);
-    const { body: resultBody } = result;
-
-    if (result.status === 204) {
-      return null;
-    }
-
-    let nextLink = getNextLinkFromHeaders(result.headers);
-    if (nextLink) {
-      debug(`Following next link ${nextLink}`);
-      let resultData = resultBody;
-      let nextPath;
-
-      while (nextLink !== null) {
-        debug(`Following next link ${nextLink}`);
-        nextPath = nextLink.url.slice(this.url.length); // remove the baseUrl
-        const nextResult = await fetch(nextPath);
-        resultData = resultData.concat(nextResult.body);
-        nextLink = getNextLinkFromHeaders(result.headers);
-      }
-
-      return resultData;
-    }
-
-    return resultBody;
-  }
-
-  /**
-   * GET convenience method
-   *
-   * @param {string} path
-   * @param {object} options
-   */
-  get(path, options) {
-    const postOptions = { ...options, method: 'GET' };
-    return this.request(path, postOptions);
-  }
-
-  /**
-   * POST convenience method
-   *
-   * @param {string} path
-   * @param {object} options
-   */
-  post(path, options) {
-    const postOptions = { ...options, method: 'POST' };
-    return this.request(path, postOptions);
-  }
-
-  /**
-   * PUT convenience method
-   *
-   * @param {string} path
-   * @param {object} options
-   */
-  put(path, options) {
-    const postOptions = { ...options, method: 'PUT' };
-    return this.request(path, postOptions);
-  }
-
-  /**
-   * PATCH convenience method
-   *
-   * @param {string} path
-   * @param {object} options
-   */
-  patch(path, options) {
-    const postOptions = { ...options, method: 'PATCH' };
-    return this.request(path, postOptions);
-  }
-
-  /**
-   * DELETE convenience method
-   *
-   * @param {string} path
-   * @param {object} options
-   */
-  delete(path, options) {
-    const postOptions = { ...options, method: 'DELETE' };
-    return this.request(path, postOptions);
-  }
-
-  /**
    * List all projects the current user has access to.
    *
    * @see https://developers.phraseapp.com/api/#projects
    */
   listProjects() {
-    return this.get('/projects');
+    const url = urljoin(this.baseUrl, 'projects');
+    return fetch.getAll(url, this.globalFetchOptions);
+  }
+
+  /**
+   * List all locales for a projects.
+   *
+   * @param {string} projectId
+   * @see https://developers.phraseapp.com/api/#locales_index
+   */
+  listLocales(projectId) {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/locales`);
+    return fetch.getAll(url, this.globalFetchOptions);
+  }
+
+  /**
+   * List all keys for a project
+   * 
+   * @param {string} projectId 
+   * @see https://developers.phraseapp.com/api/#keys_index
+   */
+  listKeys(projectId) {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/keys?per_page=100`);
+    return fetch.getAll(url, this.globalFetchOptions);
   }
 
   /**
    * Search keys for the given project matching query.
    *
-   * @see https://developers.phraseapp.com/api/#keys_search
    * @param {string} projectId
    * @param {object} query
+   * @see https://developers.phraseapp.com/api/#keys_search
    */
   searchKeys(projectId, query = {}) {
-    return this.post(`/projects/${projectId}/keys/search`, {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/search?per_page=100`);
+    return fetch.post(url, {
+      ...this.globalFetchOptions,
       body: query,
     });
   }
 
   /**
-   * List all translation for a single key.
+   * List translations for the given project.
    *
-   * @see https://developers.phraseapp.com/api/#translations_index_keys
    * @param {string} projectId
-   * @param {string} keyId
+   * @see https://developers.phraseapp.com/api/#translations_index
    */
-  listTranslations(projectId, keyId) {
-    return this.get(`/projects/${projectId}/keys/${keyId}/translations`);
+  listTranslations(projectId) {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/translations?per_page=100`);
+    return fetch.getAll(url, this.globalFetchOptions);
+  }
+
+  /**
+   * Search translation for the given project matching query.
+   * 
+   * @param {string} projectId 
+   * @param {*} query 
+   * @see https://developers.phraseapp.com/api/#translations_search
+   */
+  searchTranslations(projectId, query = {}) {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/translations/search?per_page=100`);
+    return fetch.post(url, {
+      ...this.globalFetchOptions,
+      body: query,
+    });
+  }
+
+  /**
+   * List translations for a specific key.
+   * 
+   * @param {string} projectId 
+   * @param {string} keyId 
+   * @see https://developers.phraseapp.com/api/#translations_index_keys
+   */
+  listTranslationsForKey(projectId, keyId) {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/${keyId}/translations?per_page=100`);
+    return fetch.getAll(url, this.globalFetchOptions);
   }
 
   /**
    * Create translation for a key.
    *
-   * @see https://developers.phraseapp.com/api/#translations_create
    * @param {string} projectId
    * @param {string} localeId
    * @param {string} keyId
+   * @see https://developers.phraseapp.com/api/#translations_create
    */
-  createTranslation(projectId, localeId, keyId) {
-    return this.post(`/projects/${projectId}/translations`, {
+  createTranslation(projectId, localeId, keyId, options = { content: '' }) {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/translations`);
+    return fetch.post(url, {
+      ...this.globalFetchOptions,
       body: {
+        ...options,
         locale_id: localeId,
         key_id: keyId,
       },
@@ -178,12 +137,14 @@ class PhraseAppClient {
   /**
    * Include translations for locales.
    *
-   * @see https://developers.phraseapp.com/api/#translations_include
    * @param {string} projectId
    * @param {Array<string>} translationIds
+   * @see https://developers.phraseapp.com/api/#translations_include
    */
   includeTranslations(projectId, translationIds = []) {
-    return this.patch(`/projects/${projectId}/translations/include`, {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/translations/include`);
+    return fetch.patch(url, {
+      ...this.globalFetchOptions,
       body: {
         q: `id:${[...translationIds].join(',')}`,
       },
@@ -193,12 +154,14 @@ class PhraseAppClient {
   /**
    * Exclude translations for locales.
    *
-   * @see https://developers.phraseapp.com/api/#translations_exclude
    * @param {string} projectId
    * @param {Array<string>} translationIds
+   * @see https://developers.phraseapp.com/api/#translations_exclude
    */
   excludeTranslations(projectId, translationIds = []) {
-    return this.patch(`/projects/${projectId}/translations/exclude`, {
+    const url = urljoin(this.baseUrl, `/projects/${projectId}/translations/exclude`);
+    return fetch.patch(url, {
+      ...this.globalFetchOptions,
       body: {
         q: `id:${[...translationIds].join(',')}`,
       },
