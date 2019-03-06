@@ -2,11 +2,8 @@ const debugFactory = require('debug');
 const fetchBackoffFactory = require('node-fetch-backoff');
 const parseLinkHeader = require('parse-link-header');
 const merge = require('deepmerge');
-const util = require('util');
 
 const debug = debugFactory('phraseapp-client:fetch');
-
-const inspectHeaders = headers => Object.keys(headers).map(name => `${name}: ${headers[name]}`).join('\n');
 
 /**
  *
@@ -14,30 +11,30 @@ const inspectHeaders = headers => Object.keys(headers).map(name => `${name}: ${h
  * @param {object} options
  */
 const fetch = (url, options = {}) => {
-  const { body } = options;
+  const opts = { ...options };
+  let debugText = `${opts.method || 'GET'} to ${url}`;
 
-  let debugText = `${options.method || 'GET'} to ${url}`;
-  if (body && typeof body !== 'string') {
-    if (!('headers' in options)) options.headers = {};
-
-    options.headers['Content-Type'] = 'application/json';
-    options.body = JSON.stringify(body);
-    debugText += ` with headers and body
-${inspectHeaders(options.headers)}\n
-${util.inspect(options.body, { showHidden: false, depth: null })}`;
-  } else {
-    debugText += ` with headers\n${inspectHeaders(options.headers)}`;
+  if (!opts.headers) {
+    opts.headers = {};
   }
 
-  const bfFetch = fetchBackoffFactory();
+  if (opts.body) {
+    opts.headers['Content-Type'] = 'application/json';
+    if (typeof opts.body !== 'string') {
+      opts.body = JSON.stringify(opts.body);
+    }
+    debugText += ` with body ${JSON.stringify(opts.body)}`;
+  }
+
+  const bfFetch = fetchBackoffFactory(opts);
   debug(debugText);
-  return bfFetch(url, options);
+  return bfFetch(url, opts);
 };
 
 /**
  * GET convenience method
  */
-fetch.get = async (url, options) => {
+fetch.get = async (url, options = {}) => {
   const result = await fetch(url, { ...options, method: 'GET' });
   if (result.status === 204) {
     return null;
@@ -49,7 +46,7 @@ fetch.get = async (url, options) => {
 /**
  * POST convenience method
  */
-fetch.post = async (url, options) => {
+fetch.post = async (url, options = {}) => {
   const result = await fetch(url, { ...options, method: 'POST' });
   if (result.status === 204) {
     return null;
@@ -60,7 +57,7 @@ fetch.post = async (url, options) => {
 /**
  * PUT convenience method
  */
-fetch.put = async (url, options) => {
+fetch.put = async (url, options = {}) => {
   const result = await fetch(url, { ...options, method: 'PUT' });
   if (result.status === 204) {
     return null;
@@ -71,7 +68,7 @@ fetch.put = async (url, options) => {
 /**
  * PATCH convenience method
  */
-fetch.patch = async (url, options) => {
+fetch.patch = async (url, options = {}) => {
   const result = await fetch(url, { ...options, method: 'PATCH' });
   if (result.status === 204) {
     return null;
@@ -82,7 +79,7 @@ fetch.patch = async (url, options) => {
 /**
  * DELETE convenience method
  */
-fetch.delete = async (url, options) => {
+fetch.delete = async (url, options = {}) => {
   const result = await fetch(url, { ...options, method: 'DELETE' });
   if (result.status === 204) {
     return null;
