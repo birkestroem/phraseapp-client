@@ -23,6 +23,7 @@ class PhraseAppProject {
       'searchKeysStream',
       'searchTranslations',
       'searchTranslationsSteam',
+      'updateTranslation',
     ].forEach(methodName => this.createMethod(methodName));
   }
 
