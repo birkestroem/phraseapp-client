@@ -13,7 +13,9 @@ class PhraseAppProject {
 
     [
       'createKey',
+      'deleteKey',
       'createTranslation',
+      'getKey',
       'listKeys',
       'listKeysStream',
       'listLocales',
