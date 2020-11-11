@@ -1,20 +1,21 @@
 {
   "name": "phraseapp-client",
   "version": "1.0.6",
-  "description": "A thin wrapper to handle requests to the PhraseApp API",
+  "description": "A thin wrapper to handle requests to the Phrase API",
   "main": "src/index.js",
   "dependencies": {
-    "debug": "4.0.1",
-    "deepmerge": "^2.2.1",
+    "debug": "4.2.0",
+    "deepmerge": "^4.2.2",
     "node-fetch-backoff": "0.0.5",
     "parse-link-header": "1.0.1",
-    "url-join": "^4.0.0"
+    "url-join": "^4.0.1"
   },
   "devDependencies": {
-    "eslint": "4.19.0",
-    "eslint-config-airbnb-base": "12.1.0",
-    "eslint-plugin-import": "2.9.0",
-    "eslint-plugin-jest": "21.15.0"
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jest": "24.1.0",
+    "eslint": "7.13.0",
+    "jest": "26.6.3"
   },
   "scripts": {
     "lint": "eslint src"

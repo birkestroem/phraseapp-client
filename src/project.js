@@ -26,7 +26,7 @@ class PhraseAppProject {
       'searchTranslations',
       'searchTranslationsSteam',
       'updateTranslation',
-    ].forEach(methodName => this.createMethod(methodName));
+    ].forEach((methodName) => this.createMethod(methodName));
   }
 
   getInfo() {

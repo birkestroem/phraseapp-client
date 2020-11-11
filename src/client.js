@@ -1,6 +1,6 @@
-const fetch = require('./fetch');
 const urljoin = require('url-join');
 const https = require('https');
+const fetch = require('./fetch');
 const { ReadableStream } = require('./readableStream');
 
 /**
@@ -19,7 +19,7 @@ class PhraseAppClient {
         Authorization: `token ${accessToken}`,
         'User-Agent': 'https://www.npmjs.com/package/phraseapp-client',
       },
-      isOK: res => res.status < 400,
+      isOK: (res) => res.status < 400,
       extraText: (resp) => {
         const rateLimit = resp.headers.get('X-Rate-Limit-Limit');
         const rateLimitRemaining = resp.headers.get('X-Rate-Limit-Remaining');
@@ -415,7 +415,6 @@ class PhraseAppClient {
       body: query,
     });
   }
-
 
   /**
    *

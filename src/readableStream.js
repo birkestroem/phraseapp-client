@@ -1,7 +1,7 @@
 const debugFactory = require('debug');
 const { Readable } = require('stream');
-const fetch = require('./fetch');
 const { URL } = require('url');
+const fetch = require('./fetch');
 
 const debug = debugFactory('phraseapp-client:readablestream');
 
@@ -55,7 +55,7 @@ class ReadableStream extends Readable {
     return null;
   }
 
-  _read() {
+  _read() { // eslint-disable-line no-underscore-dangle
     debug('Read request');
     if (this.isFetching === true) {
       return;
