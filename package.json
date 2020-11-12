@@ -6,15 +6,15 @@
   "dependencies": {
     "debug": "4.2.0",
     "deepmerge": "^4.2.2",
-    "node-fetch-backoff": "0.0.5",
+    "node-fetch-backoff": "0.1.0",
     "parse-link-header": "1.0.1",
     "url-join": "^4.0.1"
   },
   "devDependencies": {
+    "eslint": "7.13.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jest": "24.1.0",
-    "eslint": "7.13.0",
     "jest": "26.6.3"
   },
   "scripts": {
