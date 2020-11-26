@@ -179,7 +179,7 @@ class PhraseAppClient {
    * @param {string} id
    * @see https://developers.phraseapp.com/api/#keys_destroy
    */
-  deleteKey(projectId, id) {
+  async deleteKey(projectId, id) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/${id}`);
     const res = await fetch.delete(url);
 
