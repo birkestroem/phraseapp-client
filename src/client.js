@@ -181,7 +181,7 @@ class PhraseAppClient {
    */
   deleteKey(projectId, id) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/${id}`);
-    const res = fetch.delete(url);
+    const res = await fetch.delete(url);
 
     if (res.status !== 204) {
       throw new Error(`Failure deleting [${res.status}]`);
