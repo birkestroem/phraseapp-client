@@ -181,7 +181,7 @@ class PhraseAppClient {
    */
   async deleteKey(projectId, id) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/${id}`);
-    const res = await fetch.delete(url);
+    const res = await fetch.delete(url, this.globalFetchOptions);
 
     if (res.status !== 204) {
       throw new Error(`Failure deleting [${res.status}]`);
@@ -365,7 +365,7 @@ class PhraseAppClient {
    */
   getTranslation(projectId, id) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/${id}`);
-    return fetch.get(url);
+    return fetch.get(url, this.globalFetchOptions);
   }
 
   /**
