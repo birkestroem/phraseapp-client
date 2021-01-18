@@ -163,7 +163,7 @@ class PhraseAppClient {
    * @param {string} name
    * @see https://developers.phraseapp.com/api/#keys_create
    */
-  async createKey(projectId, name) {
+  createKey(projectId, name) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys`);
     return fetch.post(url, {
       ...this.globalFetchOptions,
@@ -222,7 +222,7 @@ class PhraseAppClient {
    * @param {[string]} tags
    * @see https://developers.phraseapp.com/api/#keys_tag
    */
-  async tagKeyCollection(projectId, ids = [], tags = []) {
+  tagKeyCollection(projectId, ids = [], tags = []) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/tag`);
     return fetch.patch(url, {
       ...this.globalFetchOptions,
