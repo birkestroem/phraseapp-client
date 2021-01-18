@@ -71,7 +71,7 @@ class PhraseAppClient {
    * @param {object} options
    * @see https://developers.phraseapp.com/api/#locales_create
    */
-  async createLocale(projectId, name, code, options = {
+  createLocale(projectId, name, code, options = {
     default: false,
     main: false,
     unverifyNewTranslations: false,
@@ -179,15 +179,9 @@ class PhraseAppClient {
    * @param {string} id
    * @see https://developers.phraseapp.com/api/#keys_destroy
    */
-  async deleteKey(projectId, id) {
+  deleteKey(projectId, id) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/${id}`);
-    const res = await fetch.delete(url, this.globalFetchOptions);
-
-    if (res.status !== 204) {
-      throw new Error(`Failure deleting [${res.status}]`);
-    }
-
-    return this;
+    return fetch.delete(url, this.globalFetchOptions);
   }
 
   /**
@@ -198,20 +192,14 @@ class PhraseAppClient {
    * @param {[string]} ids
    * @see https://developers.phraseapp.com/api/#keys_destroy-list
    */
-  async deleteKeyCollection(projectId, ids = []) {
+  deleteKeyCollection(projectId, ids = []) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys`);
-    const res = await fetch.delete(url, {
+    return fetch.delete(url, {
       ...this.globalFetchOptions,
       body: {
         ids: `ids:${ids.join(',')}`,
       },
     });
-
-    if (res.status !== 200) {
-      throw new Error(`Failure deleting [${res.status}]`);
-    }
-
-    return this;
   }
 
   /**
@@ -241,21 +229,15 @@ class PhraseAppClient {
    * @param {[string]} tags
    * @see https://developers.phraseapp.com/api/#keys_untag
    */
-  async untagKeyCollection(projectId, ids = [], tags = []) {
+  untagKeyCollection(projectId, ids = [], tags = []) {
     const url = urljoin(this.baseUrl, `/projects/${projectId}/keys/untag`);
-    const res = await fetch.patch(url, {
+    return fetch.patch(url, {
       ...this.globalFetchOptions,
       body: {
         q: `ids:${ids.join(',')}`,
         tags: tags.join(','),
       },
     });
-
-    if (res.status !== 200) {
-      throw new Error(`Failure untagging keys [${res.status}]`);
-    }
-
-    return this;
   }
 
   /**
