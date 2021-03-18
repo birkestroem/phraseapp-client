@@ -14,6 +14,7 @@ class PhraseAppProject {
     [
       'createKey',
       'deleteKey',
+      'deleteKeyCollection',
       'createTranslation',
       'getKey',
       'listKeys',
